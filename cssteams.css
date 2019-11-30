@@ -1,0 +1,319 @@
+/* The Maker Bus Stylesheet */
+
+@import url(http://fonts.googleapis.com/css?family=Oswald:700,400);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+  background: url("Tlogos/baseball22.jpeg");
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-color: #fff;
+  color: #666;
+  font-family: 'Open Sans', arial, sans-serif;
+  width: 960px;
+  margin: 0 auto 0 auto;}
+  
+header {
+  display: block;
+  height: 140px;
+  border-bottom: 2px solid #000;
+  margin-top: 10px;
+  margin-bottom: 5px;}
+  
+#foot {
+    background-color: white;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #31373f;
+    display: inline-block;
+    overflow: auto;
+    width:500px;
+    height:500px;
+    position: relative;
+    float:right;
+    }
+
+#criteria{
+ width:300px;   
+}
+
+#year{
+ width:300px;   
+}
+
+#team1{
+ width:300px;   
+}
+
+#team2{
+ width:300px;   
+}
+
+footer{
+  display: block;
+  height: 100px;
+  border-top: 2px solid #000;
+  margin-bottom: 5px;}
+
+h1{
+  font-weight: normal;
+  margin: 28px 0 0 0;
+  float: left;
+  width: 225px;
+  height: 90px;
+  background-repeat: no-repeat;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;}
+
+h2 {
+  font-size: 2.4em;
+  margin: 0.7em 0 1.7em 0;
+  padding: 0;
+  color: #000;
+  line-height: 1em;
+  letter-spacing: -.06em;}
+
+h3 {
+  margin: 0;
+  font-size: 1.4em;
+  color: #3fbb8a; 
+  font-family: oswald, arial, sans-serif;}
+
+nav {
+  font-family: oswald, arial, sans-serif;
+  float: right; 
+  width: 700px;
+  padding-top: 0px;
+  font-size: 1 em;
+  text-align: right;
+  text-transform: uppercase;}
+nav a {
+  padding-left: 5px;}
+nav p {
+  float: left; }
+nav a:hover, a.current {
+  color: #d71a00;}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+a {text-decoration: none; color: #000;}
+
+p.foot2 {color:blue; font-size:15pt; text-align:center;
+            font-family:arial,sans-serif; font-weight:bold}
+
+p.foot3 {color:white; font-size:15pt; text-align:center;
+                font-family:arial,sans-serif; font-weight:bold}
+
+.third, .event {
+  width: 940px;
+  float: left;
+  text-align: center;}
+  
+.third1 {
+  width: 400px;
+  float: left;
+  text-align: center;}
+  
+.third2 {
+  width: 1000px;
+  float: center;
+  text-align: center;}
+  
+.third3 {
+    width: 900px;
+    float: left;
+    text-align: center;}  
+
+.third4 {
+      width: 400px;
+      float: right;
+      text-align: center;}  
+
+    
+.third1 p {
+  color:red;
+  text-align: left;
+  line-height: 1.4em;}
+  
+.third a:hover {
+ color: #d71a00;}
+
+}
+
+
+.event p {border-right: 1px solid #999; }
+#content .event:last-child p {border-right: none;}
+
+#container1{
+  background-color:white ;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #31373f;
+  display: inline-block;
+  overflow: fixed;
+  width:400px;
+  height:400px;
+  float:left ; 
+}
+
+#container2{
+  background-color:white ;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #31373f;
+  display: inline-block;
+  overflow: fixed;
+  width:400px;
+  height:400px;
+  float:right ; 
+}
+
+.third p {
+  text-align: left;
+  line-height: 1.4em;}
+
+.intro p {
+  margin: 0 0 0 0;
+  padding: 0 20px 20px 0;}
+
+
+.half {
+  padding-top: 60px;
+  width: 480px;
+  float: left;
+  text-align: center;}
+  
+ button {
+  border: none;}
+  
+ button {
+  font-size: 90%;
+  text-align: left;
+  text-transform: uppercase;}
+  
+button {
+    font-family: 'Jacques Francois', serif;}
+
+#vote {padding-top: 20px;}
+p#selector {margin-top: -40px;}
+
+form {
+  margin: 0 0 0 0px;
+  width: 300px;}
+label, input {
+  display: inline-block;}
+label {
+  display: block;
+  text-align: left;
+  float:center;
+  padding-top: 10px;
+  text-transform: uppercase;}
+
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: transparent;
+    text-align: left;
+    padding: 4px;
+  }
+
+  tr:nth-child(even) {
+    background-color: transparent;
+  }
+  
+  .button3 {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: green;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    width: 70%;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+  }
+
+  .button3:hover {
+    background-color: #d75359;
+    color: white;
+  }
+  
+  .button4 {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #CD7F32;
+    border: none;
+    color: blue;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    width: 80px;
+    float: left;
+    border-radius:50%;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+  }
+
+  .button4:hover {
+    background-color: #d75359;
+    color: white;
+  }
+
+
+input {
+  border: 1px solid #999;
+  border-radius: 5px;
+  background-color: white;
+  font-size: 1em;
+  line-height: 1em;
+  width: 280px;
+  padding: 6px 10px 6px 10px;}
+  
+input[type=submit]{
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  clear:both;
+  float: left;
+  width: 8em;
+  padding: 8px 20px 8px 20px;
+  margin-top: 10px;
+  text-transform: uppercase;}
+  
+  input[type=text]{
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    clear:both;
+    float: left;
+    width: 200px;
+    padding: 8px 20px 8px 20px;
+    margin-top: 10px;
+    text-transform: uppercase;}
+
+input[type=submit]:hover {
+  background-color: #000;
+  cursor: pointer;}
+
