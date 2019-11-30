@@ -15,19 +15,23 @@
   $formula="";
   $formula1="";
   
-  $batter1 = trim($_POST['batter1']);
-  $batter2 = trim($_POST['batter2']);
-  $categories = trim($_POST['categories']);
-  $save1 = trim($_POST['save1']);
-  $iduser=$_SESSION['vuser'];
+  $idqs = trim($_GET['id']);
   
-   if (!get_magic_quotes_gpc()){
-    $batter1 = addslashes($batter1);
-    $batter2= addslashes($batter2);
-    $categories = addslashes($categories);
-    $save1 = addslashes($save1);
-    }
-    
+  $query = "select * from saveq4 where cid='$idqs'";
+  $result= $db->query($query);
+  $num_results = $result->num_rows;
+  
+  for ($i=0; $i <$num_results; $i++) {
+    $row = $result->fetch_assoc();
+    $cid= stripslashes($row['cid']);
+    $id= stripslashes($row['uid']);
+    $batter1= stripslashes($row['pitcher1']);
+    $batter2= stripslashes($row['pitcher2']);
+    $categories= stripslashes($row['criteria']);
+  }    
+
+  
+      
     $token = strtok($batter1, " ");
     $namein1=$token;
      
@@ -46,69 +50,34 @@
       $token1 = strtok(" ");
       }
 
-  $csave=0;
-    
-    if($save1=="Yes"){
-        
-           $query = "select * from saveq3";
-           $result= $db->query($query);
-           $num_results = $result->num_rows;
-          
-       for ($i=0; $i <$num_results; $i++) {
-              $row = $result->fetch_assoc();
-              $spid= stripslashes($row['cid']);
-              $sid= stripslashes($row['uid']);
-              $sbatter1= stripslashes($row['batter1']);
-              $sbatter2= stripslashes($row['batter2']);
-              $scriteria= stripslashes($row['criteria']);
-              
-              if($sid==$iduser && $sbatter1==$batter1 && $sbatter2==$batter2 && $scriteria==$categories){
-                   $csave=1;
-              }
-              
-              if($sid==$iduser && $sbatter1==$batter2 && $sbatter2==$batter1 && $scriteria==$categories){
-                   $csave=1;
-              }
-
-        }
-
-        if($csave==0){
-              $query = "insert into saveq3 values(0,'$iduser','$batter1','$batter2','$categories')";
-              $result= $db->query($query);
-        }
-    }
-    
-        
   $batter1a = array(); //array to hold team1 info
   $batter2a = array(); //array to hold team2 info
   
   
     switch($categories){
      
-     case "Hits":
-      $comments="";
-      $formula="";
+     case "Wins":
       $count=0;
       for ($i=2010; $i <=2019; $i++) {
-      $cyear="b".$i;
+      $cyear="p".$i;
       $gyear[$count]=$i;
-      $query = "select h from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+      $query = "select w from $cyear where name like '$namein1%' and name like '%$namein1_1'";
       $result= $db->query($query);
       $num_results = $result->num_rows;
       if($num_results>0){
       $row = $result->fetch_assoc();
-      $hits1[$count]= stripslashes($row['h']);
+      $hits1[$count]= stripslashes($row['w']);
       }
       else{
       $hits1[$count]=0;  
       }
       
-      $query = "select h from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+      $query = "select w from $cyear where name like '$namein2%' and name like '%$namein2_1'";
       $result= $db->query($query);
       $num_results = $result->num_rows;
       if($num_results>0){
       $row = $result->fetch_assoc();
-      $hits2[$count]= stripslashes($row['h']);
+      $hits2[$count]= stripslashes($row['w']);
       }
       else{
       $hits2[$count]=0;  
@@ -122,30 +91,28 @@
       }
      break;
      
-    case "Runs":
-    $comments="";
-    $formula="";
-    $count=0;
+    case "Losses":
+     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select r from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select l from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['r']);
+    $hits1[$count]= stripslashes($row['l']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select r from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select l from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['r']);
+    $hits2[$count]= stripslashes($row['l']);
     }
     else{
     $hits2[$count]=0;  
@@ -159,30 +126,28 @@
     }
     break;
      
-    case "Doubles":
-    $comments="";
-    $formula="";
+    case "Earned runs average":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select 2b from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select era from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['2b']);
+    $hits1[$count]= stripslashes($row['era']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select 2b from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select era from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['2b']);
+    $hits2[$count]= stripslashes($row['era']);
     }
     else{
     $hits2[$count]=0;  
@@ -196,30 +161,28 @@
     }
     break;
      
-    case "Triples":
-    $comments="";
-    $formula="";
+    case "Games started":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select 3b from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select gs from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['3b']);
+    $hits1[$count]= stripslashes($row['gs']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select 3b from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select gs from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['3b']);
+    $hits2[$count]= stripslashes($row['gs']);
     }
     else{
     $hits2[$count]=0;  
@@ -233,30 +196,28 @@
     }
     break;
      
-    case "Home runs":
-    $comments="";
-    $formula="";
+    case "Innings pitched":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select hr from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select ip from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['hr']);
+    $hits1[$count]= stripslashes($row['ip']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select hr from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select ip from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['hr']);
+    $hits2[$count]= stripslashes($row['ip']);
     }
     else{
     $hits2[$count]=0;  
@@ -270,67 +231,28 @@
     }
     break;
      
-    case "Stolen Bases":
-    $comments="";
-    $formula="";
+    case "Hits allowed":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select sb from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select h from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['sb']);
+    $hits1[$count]= stripslashes($row['h']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select sb from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select h from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['sb']);
-    }
-    else{
-    $hits2[$count]=0;  
-    }
-    $count=$count+1;   
-    }
-    
-    for ($i=0; $i <=9; $i++) {
-      array_push($batter1a, array("y"=> $hits1[$i],"label"=>$gyear[$i]));
-      array_push($batter2a, array("y"=> $hits2[$i],"label"=>$gyear[$i]));
-    }
-    break;
-     
-    case "Base on Balls":
-    $comments="";
-    $formula="";
-    $count=0;
-    for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
-    $gyear[$count]=$i;
-    $query = "select bb from $cyear where name like '$namein1%' and name like '%$namein1_1'";
-    $result= $db->query($query);
-    $num_results = $result->num_rows;
-    if($num_results>0){
-    $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['bb']);
-    }
-    else{
-    $hits1[$count]=0;  
-    }
-    
-    $query = "select bb from $cyear where name like '$namein2%' and name like '%$namein2_1'";
-    $result= $db->query($query);
-    $num_results = $result->num_rows;
-    if($num_results>0){
-    $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['bb']);
+    $hits2[$count]= stripslashes($row['h']);
     }
     else{
     $hits2[$count]=0;  
@@ -345,11 +267,9 @@
     break;
      
     case "Strike outs":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
     $query = "select so from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
@@ -381,30 +301,28 @@
     }
     break;
      
-    case "Runs batted in":
-    $comments="";
-    $formula="";
+    case "Strike outs per nine innings":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select rbi from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select so9 from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['rbi']);
+    $hits1[$count]= stripslashes($row['so9']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select rbi from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select so9 from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['rbi']);
+    $hits2[$count]= stripslashes($row['so9']);
     }
     else{
     $hits2[$count]=0;  
@@ -418,30 +336,28 @@
     }
     break;
      
-    case "Batter average":
-    $comments="";
-    $formula="";
+    case "Earned runs":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select ba from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select er from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['ba'])*1000;
+    $hits1[$count]= stripslashes($row['er']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select ba from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select er from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['ba'])*1000;
+    $hits2[$count]= stripslashes($row['er']);
     }
     else{
     $hits2[$count]=0;  
@@ -455,30 +371,63 @@
     }
     break;
      
-    case "On base percentage":
-    $comments="";
-    $formula="";
+    case "Home runs allowed":
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
-    $cyear="b".$i;
+    $cyear="p".$i;
     $gyear[$count]=$i;
-    $query = "select obp from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $query = "select hr from $cyear where name like '$namein1%' and name like '%$namein1_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits1[$count]= stripslashes($row['obp'])*1000;
+    $hits1[$count]= stripslashes($row['hr']);
     }
     else{
     $hits1[$count]=0;  
     }
     
-    $query = "select obp from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $query = "select hr from $cyear where name like '$namein2%' and name like '%$namein2_1'";
     $result= $db->query($query);
     $num_results = $result->num_rows;
     if($num_results>0){
     $row = $result->fetch_assoc();
-    $hits2[$count]= stripslashes($row['obp'])*1000;
+    $hits2[$count]= stripslashes($row['hr']);
+    }
+    else{
+    $hits2[$count]=0;  
+    }
+    $count=$count+1;   
+    }
+    
+    for ($i=0; $i <=9; $i++) {
+      array_push($batter1a, array("y"=> $hits1[$i],"label"=>$gyear[$i]));
+      array_push($batter2a, array("y"=> $hits2[$i],"label"=>$gyear[$i]));
+    }
+    break;
+     
+    case "Base on balls allowed":
+    $count=0;
+    for ($i=2010; $i <=2019; $i++) {
+    $cyear="p".$i;
+    $gyear[$count]=$i;
+    $query = "select bb from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+    $result= $db->query($query);
+    $num_results = $result->num_rows;
+    if($num_results>0){
+    $row = $result->fetch_assoc();
+    $hits1[$count]= stripslashes($row['bb']);
+    }
+    else{
+    $hits1[$count]=0;  
+    }
+    
+    $query = "select bb from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+    $result= $db->query($query);
+    $num_results = $result->num_rows;
+    if($num_results>0){
+    $row = $result->fetch_assoc();
+    $hits2[$count]= stripslashes($row['bb']);
     }
     else{
     $hits2[$count]=0;  
@@ -492,49 +441,47 @@
     }
     break;
     
-     case "weighted on-base average":
-      $comments="weighted on-base average is a statistic, based on linear weights, designed to measure a player's overall offensive contributions per plate appearance. It is formed from taking the observed run values of various offensive events, dividing by a player's plate appearances, and scaling the result to be on the same scale as on-base percentage. Unlike statistics like OPS, wOBA attempts to assign the proper value for each type of hitting event. It was created by Tom Tango and his coauthors for The Book: Playing the Percentages in Baseball.";
-      $formula="wOBA.jpg";
-      $formula1="wOBAscale.png";
+     case "Fielding independent pitching":
+      $comments="Fielding independent pitching is ERA that removes the pitcher’s defense from the equation.FIP is on the same scale as ERA so 4.20 is considered average.";
+      $formula="FIP.png";
       $count=0;
       for ($i=2010; $i <=2019; $i++) {
-      $cyear="b".$i;
+      $cyear="p".$i;
       $gyear[$count]=$i;
-      $query = "select ab,h,2b,3b,hr,bb,hbp,sf,ibb from $cyear where name like '$namein1%' and name like '%$namein1_1'";
+      
+      $query = "select cFIP from leagueA where season=$i";
+      $result= $db->query($query);
+      $num_results = $result->num_rows;
+      $row = $result->fetch_assoc();
+      $cfip=stripslashes($row['cFIP']);
+      
+      $query = "select ip,hr,bb,so,hbp from $cyear where name like '$namein1%' and name like '%$namein1_1'";
       $result= $db->query($query);
       $num_results = $result->num_rows;
       if($num_results>0){
       $row = $result->fetch_assoc();
-      $ab=stripslashes($row['ab']);
-      $h=stripslashes($row['h']);
-      $double=stripslashes($row['2b']);
-      $triple=stripslashes($row['3b']);
+      $ip=stripslashes($row['ip']);
       $hr=stripslashes($row['hr']);
       $bb=stripslashes($row['bb']);
+      $so=stripslashes($row['so']);
       $hbp=stripslashes($row['hbp']);
-      $sf=stripslashes($row['sf']);
-      $ibb=stripslashes($row['ibb']);
-      $hits1[$count]= (((0.69*($bb-$ibb))+(0.72*$hbp)+(0.88*$h)+(1.247*$double)+(1.578*$triple)+(2.031*$hr))/($ab+$bb-$ibb+$sf+$hbp))*1000;
+      $hits1[$count]= ((((13*$hr)+(3*($bb+$hbp))-(2*$so))/$ip)+$cfip);
       }
       else{
       $hits1[$count]=0;  
       }
       
-      $query = "select ab,h,2b,3b,hr,bb,hbp,sf,ibb from $cyear where name like '$namein2%' and name like '%$namein2_1'";
+      $query = "select ip,hr,bb,so,hbp from $cyear where name like '$namein2%' and name like '%$namein2_1'";
       $result= $db->query($query);
       $num_results = $result->num_rows;
       if($num_results>0){
       $row = $result->fetch_assoc();
-      $ab=stripslashes($row['ab']);
-      $h=stripslashes($row['h']);
-      $double=stripslashes($row['2b']);
-      $triple=stripslashes($row['3b']);
+      $ip=stripslashes($row['ip']);
       $hr=stripslashes($row['hr']);
       $bb=stripslashes($row['bb']);
+      $so=stripslashes($row['so']);
       $hbp=stripslashes($row['hbp']);
-      $sf=stripslashes($row['sf']);
-      $ibb=stripslashes($row['ibb']);
-      $hits2[$count]= (((0.69*($bb-$ibb))+(0.72*$hbp)+(0.88*$h)+(1.247*$double)+(1.578*$triple)+(2.031*$hr))/($ab+$bb-$ibb+$sf+$hbp))*1000; 
+      $hits2[$count]= ((((13*$hr)+(3*($bb+$hbp))-(2*$so))/$ip)+$cfip);
       }
       else{
       $hits2[$count]=0;  
@@ -547,100 +494,7 @@
         array_push($batter2a, array("y"=> $hits2[$i],"label"=>$gyear[$i]));
       }
       break;
-
-    case "insolated power":
-      $comments="Isolated Power tells how often a player hits for extra bases. It is calculated as SLG-AVG. Iso more so tells what kind of hitter a player is instead of how much value he produced. Its flaw is that it counts all extra-base hits as the same value. A .140 ISO is average, .240 and above is excellent, and .080 and below is awful.";
-      $formula="iso.png";
-      $count=0;
-      for ($i=2010; $i <=2019; $i++) {
-      $cyear="b".$i;
-      $gyear[$count]=$i;
-      $query = "select ab,2b,3b,hr from $cyear where name like '$namein1%' and name like '%$namein1_1'";
-      $result= $db->query($query);
-      $num_results = $result->num_rows;
-      if($num_results>0){
-      $row = $result->fetch_assoc();
-      $ab=stripslashes($row['ab']);
-      $double=stripslashes($row['2b']);
-      $triple=stripslashes($row['3b']);
-      $hr=stripslashes($row['hr']);
-      $hits1[$count]= (($double+(2*$triple)+(3*$hr))/$ab)*1000;
-      }
-      else{
-      $hits1[$count]=0;  
-      }
-      
-      $query = "select ab,2b,3b,hr from $cyear where name like '$namein2%' and name like '%$namein2_1'";
-      $result= $db->query($query);
-      $num_results = $result->num_rows;
-      if($num_results>0){
-      $row = $result->fetch_assoc();
-      $ab=stripslashes($row['ab']);
-      $double=stripslashes($row['2b']);
-      $triple=stripslashes($row['3b']);
-      $hr=stripslashes($row['hr']);
-      $hits2[$count]= (($double+(2*$triple)+(3*$hr))/$ab)*1000;
-      }
-      else{
-      $hits2[$count]=0;  
-      }
-      $count=$count+1;   
-      }
-      
-      for ($i=0; $i <=9; $i++) {
-        array_push($batter1a, array("y"=> $hits1[$i],"label"=>$gyear[$i]));
-        array_push($batter2a, array("y"=> $hits2[$i],"label"=>$gyear[$i]));
-      }
-      break;
-      
-      case "batting average on balls in play":
-        $comments="Batting average on balls in play is exactly what it sounds like. It’s what the player’s hitting when he puts the ball in play and removes strikeouts and home runs from batting average.BABIP isn’t a stat you want to use on its own. The stat can help tell you if a player is unlucky or lucky but it is also influenced by speed and hard-hit ball numbers.";
-        $formula="babip.png";
-        $count=0;
-        for ($i=2010; $i <=2019; $i++) {
-        $cyear="b".$i;
-        $gyear[$count]=$i;
-        $query = "select ab,h,hr,so,sf from $cyear where name like '$namein1%' and name like '%$namein1_1'";
-        $result= $db->query($query);
-        $num_results = $result->num_rows;
-        if($num_results>0){
-        $row = $result->fetch_assoc();
-        $ab=stripslashes($row['ab']);
-        $h=stripslashes($row['h']);
-        $hr=stripslashes($row['hr']);
-        $so=stripslashes($row['so']);
-        $sf=stripslashes($row['sf']);
-        $hits1[$count]= (($h-$hr)/($ab-$so-$hr+$sf))*1000;
-        }
-        else{
-        $hits1[$count]=0;  
-        }
-        
-        $query = "select ab,h,hr,so,sf from $cyear where name like '$namein2%' and name like '%$namein2_1'";
-        $result= $db->query($query);
-        $num_results = $result->num_rows;
-        if($num_results>0){
-        $row = $result->fetch_assoc();
-        $ab=stripslashes($row['ab']);
-        $h=stripslashes($row['h']);
-        $hr=stripslashes($row['hr']);
-        $so=stripslashes($row['so']);
-        $sf=stripslashes($row['sf']);
-        $hits2[$count]= (($h-$hr)/($ab-$so-$hr+$sf))*1000;
-        }
-        else{
-        $hits2[$count]=0;  
-        }
-        $count=$count+1;   
-        }
-        
-        for ($i=0; $i <=9; $i++) {
-          array_push($batter1a, array("y"=> $hits1[$i],"label"=>$gyear[$i]));
-          array_push($batter2a, array("y"=> $hits2[$i],"label"=>$gyear[$i]));
-        }
-        break;
-
-      
+     
     default:
     break;
   }
@@ -650,14 +504,14 @@
   <html>
   <head>
   <link rel="stylesheet" href='../css/cssmain.css' />
-   <link rel="stylesheet" href='../css/accordion1.css' type="text/css" />
+  <link rel="stylesheet" href='../css/accordion1.css' type="text/css" />
   </head>
   <body>
   <div id="coverteamsphp1">
   <div id="coverteams1"></div>
   <div id="coverteams2">
   <div class="btn-group">
-  <button class="button1"><a href = "/cobatter.php">Return previous screen</button>
+  <button class="button1"><a href = "/teams/load4.php">Return previous screen</button>
   <button class="button1"><a href = "/main.php">Return home screen</button>
   </div>
   <?php

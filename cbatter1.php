@@ -15,19 +15,23 @@
   $formula="";
   $formula1="";
   
-  $batter1 = trim($_POST['batter1']);
-  $batter2 = trim($_POST['batter2']);
-  $categories = trim($_POST['categories']);
-  $save1 = trim($_POST['save1']);
-  $iduser=$_SESSION['vuser'];
-  
-   if (!get_magic_quotes_gpc()){
-    $batter1 = addslashes($batter1);
-    $batter2= addslashes($batter2);
-    $categories = addslashes($categories);
-    $save1 = addslashes($save1);
-    }
+  $idqs = trim($_GET['id']);
     
+    $query = "select * from saveq3 where cid='$idqs'";
+    $result= $db->query($query);
+    $num_results = $result->num_rows;
+    
+    for ($i=0; $i <$num_results; $i++) {
+        $row = $result->fetch_assoc();
+        $cid= stripslashes($row['cid']);
+        $id= stripslashes($row['uid']);
+        $batter1= stripslashes($row['batter1']);
+        $batter2= stripslashes($row['batter2']);
+        $categories= stripslashes($row['criteria']);
+    }    
+
+  
+      
     $token = strtok($batter1, " ");
     $namein1=$token;
      
@@ -46,39 +50,6 @@
       $token1 = strtok(" ");
       }
 
-  $csave=0;
-    
-    if($save1=="Yes"){
-        
-           $query = "select * from saveq3";
-           $result= $db->query($query);
-           $num_results = $result->num_rows;
-          
-       for ($i=0; $i <$num_results; $i++) {
-              $row = $result->fetch_assoc();
-              $spid= stripslashes($row['cid']);
-              $sid= stripslashes($row['uid']);
-              $sbatter1= stripslashes($row['batter1']);
-              $sbatter2= stripslashes($row['batter2']);
-              $scriteria= stripslashes($row['criteria']);
-              
-              if($sid==$iduser && $sbatter1==$batter1 && $sbatter2==$batter2 && $scriteria==$categories){
-                   $csave=1;
-              }
-              
-              if($sid==$iduser && $sbatter1==$batter2 && $sbatter2==$batter1 && $scriteria==$categories){
-                   $csave=1;
-              }
-
-        }
-
-        if($csave==0){
-              $query = "insert into saveq3 values(0,'$iduser','$batter1','$batter2','$categories')";
-              $result= $db->query($query);
-        }
-    }
-    
-        
   $batter1a = array(); //array to hold team1 info
   $batter2a = array(); //array to hold team2 info
   
@@ -86,8 +57,6 @@
     switch($categories){
      
      case "Hits":
-      $comments="";
-      $formula="";
       $count=0;
       for ($i=2010; $i <=2019; $i++) {
       $cyear="b".$i;
@@ -123,9 +92,7 @@
      break;
      
     case "Runs":
-    $comments="";
-    $formula="";
-    $count=0;
+     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
     $gyear[$count]=$i;
@@ -160,8 +127,6 @@
     break;
      
     case "Doubles":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -197,8 +162,6 @@
     break;
      
     case "Triples":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -234,8 +197,6 @@
     break;
      
     case "Home runs":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -271,8 +232,6 @@
     break;
      
     case "Stolen Bases":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -308,8 +267,6 @@
     break;
      
     case "Base on Balls":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -345,8 +302,6 @@
     break;
      
     case "Strike outs":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -382,8 +337,6 @@
     break;
      
     case "Runs batted in":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -419,8 +372,6 @@
     break;
      
     case "Batter average":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -456,8 +407,6 @@
     break;
      
     case "On base percentage":
-    $comments="";
-    $formula="";
     $count=0;
     for ($i=2010; $i <=2019; $i++) {
     $cyear="b".$i;
@@ -640,7 +589,7 @@
         }
         break;
 
-      
+     
     default:
     break;
   }
@@ -650,14 +599,14 @@
   <html>
   <head>
   <link rel="stylesheet" href='../css/cssmain.css' />
-   <link rel="stylesheet" href='../css/accordion1.css' type="text/css" />
+  <link rel="stylesheet" href='../css/accordion1.css' type="text/css" />
   </head>
   <body>
   <div id="coverteamsphp1">
   <div id="coverteams1"></div>
   <div id="coverteams2">
   <div class="btn-group">
-  <button class="button1"><a href = "/cobatter.php">Return previous screen</button>
+  <button class="button1"><a href = "/teams/load4.php">Return previous screen</button>
   <button class="button1"><a href = "/main.php">Return home screen</button>
   </div>
   <?php
@@ -694,6 +643,7 @@
   <?php
   }
   ?>
+
   </div>
   </div>
 <script>
